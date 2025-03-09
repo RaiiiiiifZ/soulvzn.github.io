@@ -1,8 +1,6 @@
-// Importation des modules nécessaires
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-database.js";
 
-// Configuration Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyA9YhIdQDVPLGywlYOvpclV37gqno_T6y0",
     authDomain: "vzn-app.firebaseapp.com",
