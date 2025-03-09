@@ -18,25 +18,10 @@ const db = getDatabase(app);
 // Conteneur des articles
 const articlesContainer = document.getElementById("articles-container");
 
-// Fonction pour générer un résumé via Hugging Face
-async function generateSummary(articleText) {
-    const response = await fetch("https://api-inference.huggingface.co/models/t5-small", {
-        method: "POST",
-        headers: {
-            "Authorization": "Bearer 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",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ inputs: articleText })
-    });
-
-    const result = await response.json();
-    return result[0]?.summary_text || "Résumé non disponible.";
-}
-
 // Récupérer les articles depuis Firebase
 const articlesRef = ref(db, "selectedArticles");
 get(articlesRef)
-    .then(async snapshot => {
+    .then(snapshot => {
         if (snapshot.exists()) {
             const articles = snapshot.val();
 
@@ -51,27 +36,14 @@ get(articlesRef)
 
                 const summaryDiv = document.createElement("div");
                 summaryDiv.classList.add("article-summary");
+                summaryDiv.innerHTML = `<p>${article.summary}</p><a href="${article.url}" target="_blank" class="article-link">Lire l'article complet</a>`;
+                summaryDiv.style.display = "none"; // Caché par défaut
                 articleDiv.appendChild(summaryDiv);
 
-                const link = document.createElement("a");
-                link.href = article.url;
-                link.textContent = "Lire l'article complet";
-                link.target = "_blank";
-                link.classList.add("article-link");
-
                 // Fonction pour afficher/masquer le résumé
-                title.addEventListener("click", async () => {
-                    if (summaryDiv.style.display === "none") {
-                        // Afficher le résumé
-                        if (!summaryDiv.innerHTML) {
-                            const summaryText = await generateSummary(article.title);
-                            summaryDiv.innerHTML = `<p>${summaryText}</p><a href="${article.url}" target="_blank" class="article-link">Lire l'article complet</a>`;
-                        }
-                        summaryDiv.style.display = "block";
-                    } else {
-                        // Masquer le résumé
-                        summaryDiv.style.display = "none";
-                    }
+                title.addEventListener("click", () => {
+                    summaryDiv.style.display =
+                        summaryDiv.style.display === "none" ? "block" : "none";
                 });
 
                 articlesContainer.appendChild(articleDiv);
