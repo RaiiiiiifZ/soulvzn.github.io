@@ -20,7 +20,7 @@ const articlesContainer = document.getElementById("articles-container");
 
 // Fonction pour générer un résumé via Hugging Face
 async function generateSummary(articleText) {
-    const response = await fetch("https://api-inference.huggingface.co/models/facebook/bart-large-cnn", {
+    const response = await fetch("https://api-inference.huggingface.co/models/t5-small", {
         method: "POST",
         headers: {
             "Authorization": "Bearer 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",
