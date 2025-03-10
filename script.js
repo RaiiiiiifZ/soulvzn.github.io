@@ -19,7 +19,7 @@ get(ref(db, "selectedArticles"))
     .then(snapshot => {
         if (snapshot.exists()) {
             const articles = snapshot.val();
-            Object.values(articles).forEach(article => {
+            articles.forEach(article => { // Modifier Object.values pour un simple forEach
                 const articleDiv = document.createElement("div");
                 articleDiv.innerHTML = `
                     <h2>${article.title}</h2>
