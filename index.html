@@ -3,14 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VZN Articles</title>
+    <title>VZN</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Articles Sélectionnés</h1>
-    <div id="articles-container">
-        <!-- Les articles seront injectés ici -->
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>VZN</h1>
+            <p>Bonjour, <span class="username">Adam</span></p>
+            <p class="date">Lundi, 10 Mars 2025</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab active">VZN</button>
+            <button class="tab">WRLD</button>
+            <button class="tab">YOUR VZN</button>
+        </nav>
+
+        <!-- Time Selector -->
+        <div class="time-selector">
+            <button class="time-btn">9h</button>
+            <button class="time-btn">20h</button>
+        </div>
+
+        <!-- Articles Section -->
+        <section id="articles-container">
+            <!-- Articles will be dynamically added here -->
+        </section>
     </div>
-    <script type="module" src="script.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
