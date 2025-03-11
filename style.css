@@ -1,44 +1,106 @@
+/* Base Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Georgia', serif;
+    background-color: #f2f2f2;
+    color: #333;
     margin: 0;
     padding: 0;
-    text-align: center;
 }
 
-h1 {
-    background-color: #1c4cd4;
-    color: white;
+.container {
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
 }
 
+/* Header */
+header {
+    text-align: center;
+}
+
+header h1 {
+    font-size: 36px;
+    color: #0044cc;
+}
+
+header p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.username {
+    color: #0044cc;
+}
+
+/.date {
+    font-style: italic;
+}
+
+/* Navigation Tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.tab {
+    padding: 10px 20px;
+    border: none;
+    background-color: #e6e6e6;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.tab.active {
+    background-color: #0044cc;
+    color: white;
+}
+
+/* Time Selector */
+.time-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.time-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #e6e6e6;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.time-btn:hover {
+    background-color: #cccccc;
+}
+
+/* Articles Section */
 #articles-container {
-    margin: 20px auto;
+    margin-top: 20px;
 }
 
 .article {
-    margin: 10px auto;
-    width: 80%;
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: left;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
 }
 
-.article-title {
-    cursor: pointer;
-    color: #1c4cd4;
-    font-size: 1.2em;
-    margin-bottom: 5px;
+.article h2 {
+    font-size: 24px;
+    color: #0044cc;
 }
 
-.article-summary {
-    display: none;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-left: 3px solid #1c4cd4;
+.article p {
+    font-size: 16px;
 }
 
-.article-link {
-    margin-top: 10px;
-    color: green;
+.article .source-btn {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #0044cc;
+    color: white;
+    text-decoration: none;
 }
