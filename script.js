@@ -1,69 +1,87 @@
-/* Corps de la page */
-body {
-    font-family: 'Times New Roman', serif;
-    text-align: center;
-    background-color: #f4f4f9;
-    color: #333;
-    margin: 0;
-    padding: 20px;
+// Fonction pour récupérer et afficher 5 citations basées sur la période de 12 heures
+async function fetchCitations() {
+    try {
+        // Charger les citations depuis le fichier texte
+        const response = await fetch('citations.txt');
+
+        // Vérifier si le fichier existe
+        if (!response.ok) {
+            throw new Error('Citations file not found.');
+        }
+
+        const text = await response.text();
+
+        // Diviser les citations en tableau et filtrer les lignes vides
+        const citations = text.split('\n').filter(citation => citation.trim() !== '');
+
+        // Vérifier si des citations sont disponibles
+        if (citations.length === 0) {
+            throw new Error('No citations available in the file.');
+        }
+
+        // Mélanger les citations et sélectionner les 5 premières
+        const shuffledCitations = shuffleArray(citations);
+        const selectedCitations = shuffledCitations.slice(0, 5);
+
+        // Afficher les citations dans le conteneur
+        const quotesContainer = document.getElementById('quotes-container');
+        quotesContainer.innerHTML = '';
+
+        selectedCitations.forEach((citation, index) => {
+            const [quote, author] = citation.split('|');
+
+            // Créer les éléments HTML pour chaque citation et son auteur
+            const quoteElement = document.createElement('blockquote');
+            quoteElement.classList.add('quote');
+            quoteElement.innerText = quote || "Citation not available";
+
+            const authorElement = document.createElement('p');
+            authorElement.classList.add('author');
+            authorElement.innerText = author ? `-${author}` : "";
+
+            quotesContainer.appendChild(quoteElement);
+            quotesContainer.appendChild(authorElement);
+
+            // Animation avec GSAP (décalage progressif)
+            gsap.from(quoteElement, { duration: 1, opacity: 0, y: 20, delay: index * 0.2 });
+            gsap.from(authorElement, { duration: 1, opacity: 0, y: 20, delay: index * 0.2 + 0.1 });
+        });
+    } catch (error) {
+        console.error(error.message);
+
+        // Afficher un message d'erreur dans le conteneur des citations
+        const quotesContainer = document.getElementById('quotes-container');
+        quotesContainer.innerHTML = `<p class="error">${error.message}</p>`;
+    }
 }
 
-/* Conteneur principal */
-#container {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
+// Fonction utilitaire pour mélanger un tableau (algorithme de Fisher-Yates)
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
 
-/* Titre */
-h1 {
-    font-size: 2.5em;
-    color: #0056b3;
-}
+// Fonction pour afficher la date et l'heure actuelles
+function updateDateTime() {
+    const now = new Date();
 
-/* Salutations */
-#greeting {
-    font-size: 1.5em;
-}
+    // Formatage de la date en anglais (long format)
+    const formattedDate = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
 
-/* Date et heure */
-#current-date, #current-time {
-    font-size: 1em;
-}
+    // Formatage de l'heure (24h format)
+    const formattedTime = now.toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+});
 
-/* Conteneur des citations */
-#quotes-container {
-    margin-top: 20px;
-}
-
-/* Style des citations */
-.quote {
-    font-size: 1.5em;
-    margin: 20px 0;
-}
-
-/* Auteur */
-.author {
-    font-size: 1em;
-    margin-top: 5px;
-}
-
-/* Décompte */
-#countdown {
-    font-size: 1em;
-}
-
-/* Boîte de saisie du prénom */
-.hidden {
-    display: none;
-}
-
-#name-prompt {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
+document.getElementById("current-date").innerHTML=formattedDate
