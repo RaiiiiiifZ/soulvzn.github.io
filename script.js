@@ -1,67 +1,64 @@
-// Fonction pour récupérer et afficher 5 citations basées sur la période de 12 heures
-async function fetchCitations() {
-    try {
-        // Charger les citations depuis le fichier texte
-        const response = await fetch('citations.txt');
+    // Calculer le temps restant en millisecondes
+    const timeRemaining = nextUpdate - now;
 
-        // Vérifier si le fichier existe
-        if (!response.ok) {
-            throw new Error('Citations file not found.');
-        }
+    if (timeRemaining > 0) {
+        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-        const text = await response.text();
-
-        // Diviser les citations en tableau et filtrer les lignes vides
-        const citations = text.split('\n').filter(citation => citation.trim() !== '');
-
-        // Vérifier si des citations sont disponibles
-        if (citations.length === 0) {
-            throw new Error('No citations available in the file.');
-        }
-
-        // Mélanger les citations et sélectionner les 5 premières
-        const shuffledCitations = shuffleArray(citations);
-        const selectedCitations = shuffledCitations.slice(0, 5);
-
-        // Afficher les citations dans le conteneur
-        const quotesContainer = document.getElementById('quotes-container');
-        quotesContainer.innerHTML = '';
-
-        selectedCitations.forEach((citation, index) => {
-            const [quote, author] = citation.split('|');
-
-            // Créer les éléments HTML pour chaque citation et son auteur
-            const quoteElement = document.createElement('blockquote');
-            quoteElement.classList.add('quote');
-            quoteElement.innerText = quote || "Citation not available";
-
-            const authorElement = document.createElement('p');
-            authorElement.classList.add('author');
-            authorElement.innerText = author ? `-${author}` : "";
-
-            quotesContainer.appendChild(quoteElement);
-            quotesContainer.appendChild(authorElement);
-
-            // Animation avec GSAP (décalage progressif)
-            gsap.from(quoteElement, { duration: 1, opacity: 0, y: 20, delay: index * 0.2 });
-            gsap.from(authorElement, { duration: 1, opacity: 0, y: 20, delay: index * 0.2 + 0.1 });
-        });
-    } catch (error) {
-        console.error(error.message);
-
-        // Afficher un message d'erreur dans le conteneur des citations
-        const quotesContainer = document.getElementById('quotes-container');
-        quotesContainer.innerHTML = `<p class="error">${error.message}</p>`;
+        document.getElementById('countdown').innerText =
+            `Next update in: ${hours}h ${minutes}m ${seconds}s`;
+    } else {
+        fetchCitations(); // Mettre à jour les citations
     }
 }
 
-// Fonction utilitaire pour mélanger un tableau (algorithme de Fisher-Yates)
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+// Fonction pour demander et sauvegarder le prénom de l'utilisateur
+function saveName() {
+    const nameInput = document.getElementById('name-input').value.trim();
+
+    if (nameInput) {
+        localStorage.setItem('username', nameInput);
+        document.getElementById('name-prompt').classList.add('hidden');
+        updateGreeting();
+        fetchCitations();
+        updateDateTime();
+        setInterval(updateCountdown, 1000); // Mettre à jour le compte à rebours toutes les secondes
     }
-    return array;
 }
 
-// Fonction pour affi
+// Fonction pour afficher les salutations basées sur l'heure
+function updateGreeting() {
+    const now = new Date();
+    const hours = now.getHours();
+
+    let greeting;
+    if (hours >= 6 && hours < 12) greeting = "Good Morning";
+    else if (hours >= 12 && hours < 18) greeting = "Good Afternoon";
+    else if (hours >= 18 && hours < 22) greeting = "Good Evening";
+    else greeting = "Good Night";
+
+    const name = localStorage.getItem('username') || "Guest";
+    document.getElementById('greeting').innerHTML =
+        `${greeting}, <span style="color:#0056b3">${name}</span>`;
+}
+
+// Vérifier si le prénom est déjà sauvegardé
+function checkName() {
+    const name = localStorage.getItem('username');
+
+    if (!name) {
+        document.getElementById('name-prompt').classList.remove('hidden');
+        return;
+    }
+
+    document.getElementById('name-prompt').classList.add('hidden');
+    updateGreeting();
+    fetchCitations();
+    updateDateTime();
+    setInterval(updateCountdown, 1000); // Mettre à jour le compte à rebours toutes les secondes
+}
+
+// Initialisation au chargement de la page
+checkName();
+setInterval(updateDateTime, 1000); // Mettre à jour l'heure chaque seconde
