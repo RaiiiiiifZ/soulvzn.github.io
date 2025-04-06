@@ -1,4 +1,54 @@
-/* Animation pour une entrée en fondu */
+/* Corps de la page */
+body {
+    font-family: 'Times New Roman', serif;
+    text-align: center;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Conteneur principal */
+#container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Titre */
+h1 {
+    font-size: 2.5em;
+    color: #0056b3;
+}
+
+/* Salutations */
+#greeting {
+    font-size: 1.5em;
+}
+
+/* Date et heure */
+#current-date, #current-time {
+    font-size: 1em;
+}
+
+/* Citation */
+blockquote {
+    font-size: 1.5em;
+    margin-top: 30px;
+}
+
+/* Auteur */
+#author {
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+/* Décompte */
+#countdown {
+    font-size: 1em;
+}
+
+/* Animation personnalisée pour un fondu */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -8,7 +58,7 @@
     }
 }
 
-/* Animation pour une montée progressive */
+/* Animation personnalisée pour une montée progressive */
 @keyframes slideIn {
     from {
         transform: translateY(20px);
@@ -20,10 +70,22 @@
     }
 }
 
-/* Appliquer les animations */
-#title {
-    animation: fadeIn 2s ease-in-out;
+/* Transition douce pour les changements */
+body * {
+    transition: all 0.3s ease-in-out;
 }
 
-#greeting, #current-date, #current-time, blockquote, #author, #countdown {
-    animation: slideIn 1.5s ease
+/* Boîte de saisie du prénom */
+.hidden {
+    display: none;
+}
+
+#name-prompt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
