@@ -1,3 +1,38 @@
+// Fonction pour afficher le compte à rebours avant la prochaine mise à jour
+function updateCountdown() {
+    const now = new Date();
+
+    // Déterminer l'heure de la prochaine mise à jour (00h00 ou 12h00)
+    let nextUpdate = new Date(now);
+    
+    if (now.getHours() >= 12) {
+        // Si on est après midi, prochaine mise à jour est demain à 00h00
+        nextUpdate.setDate(now.getDate() + 1);
+        nextUpdate.setHours(0, 0, 0, 0);
+    } else {
+        // Sinon, prochaine mise à jour est aujourd'hui à 12h00
+        nextUpdate.setHours(12, 0, 0, 0);
+    }
+
+    // Calculer le temps restant en millisecondes
+    const timeRemaining = nextUpdate - now;
+
+    if (timeRemaining > 0) {
+        // Convertir en heures, minutes et secondes
+        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        // Afficher le décompte
+        document.getElementById('countdown').innerText =
+            `Next update in: ${hours}h ${minutes}m ${seconds}s`;
+    } else {
+        // Si le temps restant est négatif ou nul, forcer une mise à jour
+        document.getElementById('countdown').innerText = "Updating...";
+        fetchCitation(); // Mettre à jour la citation
+    }
+}
+
 // Fonction pour récupérer une citation basée sur la période de 12 heures
 async function fetchCitation() {
     const response = await fetch('citations.txt');
@@ -18,7 +53,36 @@ async function fetchCitation() {
     document.getElementById('author').innerText = author ? `-${author}` : "";
 }
 
-// Fonction pour afficher la date et l'heure actuelles
+// Vérifier si le prénom est déjà sauvegardé
+function checkName() {
+    const name = localStorage.getItem('username');
+    
+    if (!name) {
+        document.getElementById('name-prompt').classList.remove('hidden');
+        document.getElementById('container').classList.add('hidden');
+    } else {
+        updateGreeting();
+        fetchCitation();
+        updateDateTime();
+        updateCountdown();
+        document.getElementById('container').classList.remove('hidden');
+        document.getElementById('name-prompt').classList.add('hidden');
+        
+        // Mettre à jour le décompte toutes les secondes
+        setInterval(updateCountdown, 1000);
+        
+        // Mettre à jour l'heure chaque seconde
+        setInterval(updateDateTime, 1000);
+        
+        // Rafraîchir la citation toutes les 12 heures
+        setInterval(fetchCitation, 12 * 60 * 60 * 1000);
+    }
+}
+
+// Initialisation au chargement de la page
+checkName();
+
+// Fonction pour afficher l'heure actuelle et les salutations basées sur l'heure
 function updateDateTime() {
     const now = new Date();
 
@@ -59,25 +123,3 @@ function updateGreeting() {
     
     document.getElementById('greeting').innerHTML = `${greeting}, <span style="color:#0056b3">${name}</span>`;
 }
-
-// Fonction pour afficher le compte à rebours avant la prochaine mise à jour
-function updateCountdown() {
-    const now = new Date();
-
-    // Déterminer l'heure de la prochaine mise à jour (00h00 ou 12h00)
-    let nextUpdate = new Date(now);
-    
-    if (now.getHours() >= 12) {
-        // Si on est après midi, prochaine mise à jour est demain à 00h00
-        nextUpdate.setDate(now.getDate() + 1);
-        nextUpdate.setHours(0, 0, 0, 0);
-    } else {
-        // Sinon, prochaine mise à jour est aujourd'hui à 12h00
-        nextUpdate.setHours(12, 0, 0, 0);
-    }
-
-    // Calculer le temps restant en millisecondes
-    const timeRemaining = nextUpdate - now;
-
-    // Convertir en heures, minutes et secondes
-    const hours =
