@@ -123,3 +123,14 @@ function updateGreeting() {
     
     document.getElementById('greeting').innerHTML = `${greeting}, <span style="color:#0056b3">${name}</span>`;
 }
+// Ajouter une animation au survol de la citation
+const citationElement = document.getElementById('citation');
+
+citationElement.addEventListener('mouseover', () => {
+    citationElement.style.transform = 'scale(1.05)';
+    citationElement.style.transition = 'transform 0.3s ease-in-out';
+});
+
+citationElement.addEventListener('mouseout', () => {
+    citationElement.style.transform = 'scale(1)';
+});
