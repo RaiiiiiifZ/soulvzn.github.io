@@ -31,48 +31,26 @@ h1 {
     font-size: 1em;
 }
 
-/* Citation */
-blockquote {
+/* Conteneur des citations */
+#quotes-container {
+    margin-top: 20px;
+}
+
+/* Style des citations */
+.quote {
     font-size: 1.5em;
-    margin-top: 30px;
+    margin: 20px 0;
 }
 
 /* Auteur */
-#author {
+.author {
     font-size: 1em;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 /* Décompte */
 #countdown {
     font-size: 1em;
-}
-
-/* Animation personnalisée pour un fondu */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* Animation personnalisée pour une montée progressive */
-@keyframes slideIn {
-    from {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Transition douce pour les changements */
-body * {
-    transition: all 0.3s ease-in-out;
 }
 
 /* Boîte de saisie du prénom */
@@ -88,20 +66,4 @@ body * {
     background-color: white;
     padding: 20px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-/* Conteneur principal */
-#quotes-container {
-    margin-top: 20px;
-}
-
-/* Style des citations */
-.quote {
-    font-size: 1.5em;
-    margin: 20px 0;
-}
-
-/* Auteur */
-.author {
-    font-size: 1em;
-    margin-top: 5px;
 }
