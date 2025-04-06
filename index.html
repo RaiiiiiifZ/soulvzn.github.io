@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,17 +9,18 @@
 <body>
     <div id="container">
         <h1 id="title">VZN QUOTE</h1>
-        <p id="greeting">Chargement...</p>
-        <p id="current-time">Chargement...</p>
-        <blockquote id="citation">Chargement...</blockquote>
+        <p id="greeting">Loading...</p>
+        <p id="current-date">Loading...</p>
+        <p id="current-time">Loading...</p>
+        <blockquote id="citation">Loading...</blockquote>
         <p id="author"></p>
     </div>
 
     <!-- Demande de prénom au premier démarrage -->
     <div id="name-prompt" class="hidden">
-        <label for="name-input">Entrez votre prénom :</label>
-        <input type="text" id="name-input" placeholder="Votre prénom">
-        <button onclick="saveName()">Valider</button>
+        <label for="name-input">Enter your name:</label>
+        <input type="text" id="name-input" placeholder="Your name">
+        <button onclick="saveName()">Submit</button>
     </div>
 
     <script src="script.js"></script>
