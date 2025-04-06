@@ -1,64 +1,44 @@
-    // Calculer le temps restant en millisecondes
-    const timeRemaining = nextUpdate - now;
+// Fonction pour récupérer une citation basée sur la période de 12 heures
+async function fetchCitation() {
+    const response = await fetch('citations.txt');
+    const text = await response.text();
 
-    if (timeRemaining > 0) {
-        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-        document.getElementById('countdown').innerText =
-            `Next update in: ${hours}h ${minutes}m ${seconds}s`;
-    } else {
-        fetchCitations(); // Mettre à jour les citations
-    }
-}
-
-// Fonction pour demander et sauvegarder le prénom de l'utilisateur
-function saveName() {
-    const nameInput = document.getElementById('name-input').value.trim();
-
-    if (nameInput) {
-        localStorage.setItem('username', nameInput);
-        document.getElementById('name-prompt').classList.add('hidden');
-        updateGreeting();
-        fetchCitations();
-        updateDateTime();
-        setInterval(updateCountdown, 1000); // Mettre à jour le compte à rebours toutes les secondes
-    }
-}
-
-// Fonction pour afficher les salutations basées sur l'heure
-function updateGreeting() {
+    const citations = text.split('\n').filter(citation => citation.trim() !== '');
+    
+    // Calculer l'index basé sur la période actuelle (12 heures)
     const now = new Date();
-    const hours = now.getHours();
+    
+    // Chaque période de 12 heures a un index unique (00h-12h et 12h-24h)
+    const periodIndex = Math.floor(now.getTime() / (12 * 60 * 60 * 1000)) % citations.length;
 
-    let greeting;
-    if (hours >= 6 && hours < 12) greeting = "Good Morning";
-    else if (hours >= 12 && hours < 18) greeting = "Good Afternoon";
-    else if (hours >= 18 && hours < 22) greeting = "Good Evening";
-    else greeting = "Good Night";
+    // Récupérer la citation correspondante
+    const [quote, author] = citations[periodIndex].split('|');
+    
+    document.getElementById('citation').innerText = quote || "Citation not available";
+    document.getElementById('author').innerText = author ? `-${author}` : "";
 
-    const name = localStorage.getItem('username') || "Guest";
-    document.getElementById('greeting').innerHTML =
-        `${greeting}, <span style="color:#0056b3">${name}</span>`;
+    // Animation avec GSAP sur la citation
+    gsap.from("#citation", { duration: 2, scale: 0.8, opacity: 0 });
 }
 
-// Vérifier si le prénom est déjà sauvegardé
-function checkName() {
-    const name = localStorage.getItem('username');
+// Fonction pour afficher la date et l'heure actuelles
+function updateDateTime() {
+    const now = new Date();
 
-    if (!name) {
-        document.getElementById('name-prompt').classList.remove('hidden');
-        return;
-    }
+    // Formatage de la date en anglais (long format)
+    const formattedDate = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
 
-    document.getElementById('name-prompt').classList.add('hidden');
-    updateGreeting();
-    fetchCitations();
-    updateDateTime();
-    setInterval(updateCountdown, 1000); // Mettre à jour le compte à rebours toutes les secondes
-}
+    // Formatage de l'heure (24h format)
+    const formattedTime = now.toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+});
 
-// Initialisation au chargement de la page
-checkName();
-setInterval(updateDateTime, 1000); // Mettre à jour l'heure chaque seconde
+document.getElementById('current-date').innerText
