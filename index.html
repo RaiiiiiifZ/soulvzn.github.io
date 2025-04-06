@@ -3,16 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Citation du jour</title>
+    <title>VZN Quote</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="container">
-        <h1>Citation du jour</h1>
-        <p id="citation">Chargement...</p>
-        <p id="current-time">Heure actuelle : Chargement...</p>
-        <p id="countdown">Prochaine mise à jour dans : Chargement...</p>
+        <h1 id="title">VZN QUOTE</h1>
+        <p id="greeting">Chargement...</p>
+        <p id="current-time">Chargement...</p>
+        <blockquote id="citation">Chargement...</blockquote>
+        <p id="author"></p>
     </div>
+
+    <!-- Demande de prénom au premier démarrage -->
+    <div id="name-prompt" class="hidden">
+        <label for="name-input">Entrez votre prénom :</label>
+        <input type="text" id="name-input" placeholder="Votre prénom">
+        <button onclick="saveName()">Valider</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
