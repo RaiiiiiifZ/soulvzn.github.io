@@ -60,38 +60,24 @@ function updateGreeting() {
     document.getElementById('greeting').innerHTML = `${greeting}, <span style="color:#0056b3">${name}</span>`;
 }
 
-// Fonction pour demander et sauvegarder le prénom de l'utilisateur
-function saveName() {
-    const nameInput = document.getElementById('name-input').value.trim();
-    
-    if (nameInput) {
-        localStorage.setItem('username', nameInput);
-        document.getElementById('name-prompt').classList.add('hidden');
-        updateGreeting();
-        fetchCitation();
-        updateDateTime();
-        document.getElementById('container').classList.remove('hidden');
-    }
-}
+// Fonction pour afficher le compte à rebours avant la prochaine mise à jour
+function updateCountdown() {
+    const now = new Date();
 
-// Vérifier si le prénom est déjà sauvegardé
-function checkName() {
-    const name = localStorage.getItem('username');
+    // Déterminer l'heure de la prochaine mise à jour (00h00 ou 12h00)
+    let nextUpdate = new Date(now);
     
-    if (!name) {
-        document.getElementById('name-prompt').classList.remove('hidden');
-        document.getElementById('container').classList.add('hidden');
+    if (now.getHours() >= 12) {
+        // Si on est après midi, prochaine mise à jour est demain à 00h00
+        nextUpdate.setDate(now.getDate() + 1);
+        nextUpdate.setHours(0, 0, 0, 0);
     } else {
-        updateGreeting();
-        fetchCitation();
-        updateDateTime();
-        document.getElementById('container').classList.remove('hidden');
-        document.getElementById('name-prompt').classList.add('hidden');
+        // Sinon, prochaine mise à jour est aujourd'hui à 12h00
+        nextUpdate.setHours(12, 0, 0, 0);
     }
-}
 
-// Initialisation au chargement de la page
-checkName();
+    // Calculer le temps restant en millisecondes
+    const timeRemaining = nextUpdate - now;
 
-// Mettre à jour la date et l'heure chaque seconde
-setInterval(updateDateTime, 1000);
+    // Convertir en heures, minutes et secondes
+    const hours =
