@@ -64,24 +64,4 @@ function shuffleArray(array) {
     return array;
 }
 
-// Fonction pour afficher la date et l'heure actuelles
-function updateDateTime() {
-    const now = new Date();
-
-    // Formatage de la date en anglais (long format)
-    const formattedDate = now.toLocaleDateString('en-US', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    });
-
-    // Formatage de l'heure (24h format)
-    const formattedTime = now.toLocaleTimeString('en-US', {
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-});
-
-document.getElementById("current-date").innerHTML=formattedDate
+// Fonction pour affi
