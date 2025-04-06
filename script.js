@@ -62,3 +62,20 @@ function shuffleArray(array) {
     }
     return array;
 }
+async function debugFetch() {
+    try {
+        const response = await fetch('citations.txt');
+        
+        if (!response.ok) {
+            throw new Error('Citations file not found.');
+        }
+        
+        const text = await response.text();
+        console.log("File content:", text);
+    } catch (error) {
+        console.error("Error fetching file:", error.message);
+    }
+}
+
+debugFetch();
+
