@@ -1,41 +1,58 @@
 // Fonction pour récupérer et afficher 5 citations basées sur la période de 12 heures
 async function fetchCitations() {
-    const response = await fetch('citations.txt');
-    const text = await response.text();
+    try {
+        // Charger les citations depuis le fichier texte
+        const response = await fetch('citations.txt');
 
-    const citations = text.split('\n').filter(citation => citation.trim() !== '');
+        // Vérifier si le fichier existe
+        if (!response.ok) {
+            throw new Error('Citations file not found.');
+        }
 
-    // Mélanger les citations pour obtenir un ordre aléatoire
-    const shuffledCitations = shuffleArray(citations);
+        const text = await response.text();
 
-    // Sélectionner les 5 premières citations mélangées
-    const selectedCitations = shuffledCitations.slice(0, 5);
+        // Diviser les citations en tableau et filtrer les lignes vides
+        const citations = text.split('\n').filter(citation => citation.trim() !== '');
 
-    // Effacer les anciennes citations du conteneur
-    const quotesContainer = document.getElementById('quotes-container');
-    quotesContainer.innerHTML = '';
+        // Vérifier si des citations sont disponibles
+        if (citations.length === 0) {
+            throw new Error('No citations available in the file.');
+        }
 
-    // Ajouter chaque citation au conteneur avec une animation GSAP
-    selectedCitations.forEach((citation, index) => {
-        const [quote, author] = citation.split('|');
+        // Mélanger les citations et sélectionner les 5 premières
+        const shuffledCitations = shuffleArray(citations);
+        const selectedCitations = shuffledCitations.slice(0, 5);
 
-        // Créer les éléments HTML pour la citation et l'auteur
-        const quoteElement = document.createElement('blockquote');
-        quoteElement.classList.add('quote');
-        quoteElement.innerText = quote || "Citation not available";
+        // Afficher les citations dans le conteneur
+        const quotesContainer = document.getElementById('quotes-container');
+        quotesContainer.innerHTML = '';
 
-        const authorElement = document.createElement('p');
-        authorElement.classList.add('author');
-        authorElement.innerText = author ? `-${author}` : "";
+        selectedCitations.forEach((citation, index) => {
+            const [quote, author] = citation.split('|');
 
-        // Ajouter les éléments au conteneur principal
-        quotesContainer.appendChild(quoteElement);
-        quotesContainer.appendChild(authorElement);
+            // Créer les éléments HTML pour chaque citation et son auteur
+            const quoteElement = document.createElement('blockquote');
+            quoteElement.classList.add('quote');
+            quoteElement.innerText = quote || "Citation not available";
 
-        // Animation avec GSAP (décalage progressif)
-        gsap.from(quoteElement, { duration: 1, opacity: 0, y: 20, delay: index * 0.2 });
-        gsap.from(authorElement, { duration: 1, opacity: 0, y: 20, delay: index * 0.2 + 0.1 });
-    });
+            const authorElement = document.createElement('p');
+            authorElement.classList.add('author');
+            authorElement.innerText = author ? `-${author}` : "";
+
+            quotesContainer.appendChild(quoteElement);
+            quotesContainer.appendChild(authorElement);
+
+            // Animation avec GSAP (décalage progressif)
+            gsap.from(quoteElement, { duration: 1, opacity: 0, y: 20, delay: index * 0.2 });
+            gsap.from(authorElement, { duration: 1, opacity: 0, y: 20, delay: index * 0.2 + 0.1 });
+        });
+    } catch (error) {
+        console.error(error.message);
+
+        // Afficher un message d'erreur dans le conteneur des citations
+        const quotesContainer = document.getElementById('quotes-container');
+        quotesContainer.innerHTML = `<p class="error">${error.message}</p>`;
+    }
 }
 
 // Fonction utilitaire pour mélanger un tableau (algorithme de Fisher-Yates)
