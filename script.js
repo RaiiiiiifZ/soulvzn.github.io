@@ -1,40 +1,63 @@
+// Obtenir la date et l'heure de Paris sous forme d'objet Date
 function getParisDate() {
     const now = new Date();
-    const parts = new Intl.DateTimeFormat('en-GB', {
-        timeZone: 'Europe/Paris',
+    // Extraire les composantes en heure de Paris
+    const options = { timeZone: 'Europe/Paris', hour12: false };
+    const dateParts = new Intl.DateTimeFormat('en-GB', {
+        ...options,
         year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
     }).formatToParts(now).reduce((acc, part) => {
         if (part.type !== 'literal') acc[part.type] = part.value;
         return acc;
     }, {});
-    return new Date(
-        parseInt(parts.year), parseInt(parts.month) - 1, parseInt(parts.day),
-        parseInt(parts.hour), parseInt(parts.minute), parseInt(parts.second)
-    );
+    // Créer un objet Date en UTC correspondant à la date/heure Paris
+    return new Date(Date.UTC(
+        parseInt(dateParts.year),
+        parseInt(dateParts.month) - 1,
+        parseInt(dateParts.day),
+        parseInt(dateParts.hour),
+        parseInt(dateParts.minute),
+        parseInt(dateParts.second)
+    ));
 }
 
+// Fonction pour afficher la date et l'heure de Paris
 function updateDateTime() {
     const nowParis = getParisDate();
-    document.getElementById('current-date').innerText = nowParis.toLocaleDateString('en-US', {
+
+    // Formatage de la date en anglais (long format)
+    const formattedDate = nowParis.toLocaleDateString('en-US', {
         timeZone: 'Europe/Paris',
-        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
     });
-    document.getElementById('current-time').innerText = nowParis.toLocaleTimeString('en-US', {
+
+    // Formatage de l'heure (24h format)
+    const formattedTime = nowParis.toLocaleTimeString('en-US', {
         timeZone: 'Europe/Paris',
-        hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
     });
+
+    document.getElementById('current-date').innerText = formattedDate;
+    document.getElementById('current-time').innerText = formattedTime;
 }
 
+// Fonction pour afficher le compte à rebours avant la prochaine mise à jour Paris
 function updateCountdown() {
     const nowParis = getParisDate();
     let nextUpdate = new Date(nowParis);
 
-    if (nowParis.getHours() < 12) {
-        nextUpdate.setHours(12, 0, 0, 0);
+    if (nowParis.getUTCHours() < 12) {
+        nextUpdate.setUTCHours(12, 0, 0, 0);
     } else {
-        nextUpdate.setDate(nextUpdate.getDate() + 1);
-        nextUpdate.setHours(0, 0, 0, 0);
+        nextUpdate.setUTCDate(nextUpdate.getUTCDate() + 1);
+        nextUpdate.setUTCHours(0, 0, 0, 0);
     }
 
     const timeRemaining = nextUpdate - nowParis;
@@ -49,9 +72,10 @@ function updateCountdown() {
     }
 }
 
+// Fonction pour afficher les salutations basées sur l'heure de Paris
 function updateGreeting() {
     const nowParis = getParisDate();
-    const hours = nowParis.getHours();
+    const hours = nowParis.getUTCHours();
     let greeting = "Hello";
     if (hours >= 6 && hours < 12) greeting = "Good Morning";
     else if (hours >= 12 && hours < 18) greeting = "Good Afternoon";
@@ -59,9 +83,10 @@ function updateGreeting() {
     else greeting = "Good Night";
     const name = localStorage.getItem('username') || "Guest";
     document.getElementById('greeting').innerHTML =
-        `${greeting}, <span style="color:#e94560">${name}</span>`;
+        `${greeting}, <span style="color:#0056b3">${name}</span>`;
 }
 
+// Fonction pour demander et sauvegarder le prénom de l'utilisateur
 function saveName() {
     const nameInput = document.getElementById('name-input').value.trim();
     if (nameInput) {
@@ -74,6 +99,7 @@ function saveName() {
     }
 }
 
+// Vérifier si le prénom est déjà sauvegardé
 function checkName() {
     const name = localStorage.getItem('username');
     if (!name) {
@@ -84,6 +110,7 @@ function checkName() {
     return true;
 }
 
+// Fonction pour récupérer une citation basée sur la période de 12 heures (heure de Paris)
 async function fetchCitation() {
     try {
         const response = await fetch('citations.txt');
@@ -93,26 +120,21 @@ async function fetchCitation() {
         if (citations.length === 0) throw new Error('No citations available in the file.');
 
         const nowParis = getParisDate();
-        const day = nowParis.getFullYear() * 10000 + (nowParis.getMonth() + 1) * 100 + nowParis.getDate();
-        const period = nowParis.getHours() < 12 ? 0 : 1;
+        // Calculer l'index de citation : chaque période de 12h à Paris a un index unique
+        const day = nowParis.getUTCFullYear() * 10000 + (nowParis.getUTCMonth() + 1) * 100 + nowParis.getUTCDate();
+        const period = nowParis.getUTCHours() < 12 ? 0 : 1;
         const periodIndex = (day * 2 + period) % citations.length;
+
         const [quote, author] = citations[periodIndex].split('|');
         document.getElementById('citation').innerText = quote || "Citation not available";
-        document.getElementById('author').innerText = author ? `- ${author}` : "";
+        document.getElementById('author').innerText = author ? `-${author}` : "";
     } catch (error) {
         document.getElementById('citation').innerText = error.message;
         document.getElementById('author').innerText = "";
     }
 }
 
-// Animation d’apparition au scroll (bonus moderne)
-document.addEventListener('DOMContentLoaded', () => {
-    const cards = document.querySelectorAll('.quote-card');
-    cards.forEach(card => {
-        card.classList.add('animate-fadein');
-    });
-});
-
+// Initialisation au chargement de la page
 window.onload = function () {
     if (checkName()) {
         updateGreeting();
