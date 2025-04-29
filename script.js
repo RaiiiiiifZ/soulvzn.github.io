@@ -53,7 +53,7 @@ function updateCountdown() {
     const nowParis = getParisDate();
     let nextUpdate = new Date(nowParis);
 
-    if (nowParis.getUTCHours() < 12) {
+    if (nowParis.getHours() < 12) {
         nextUpdate.setUTCHours(12, 0, 0, 0);
     } else {
         nextUpdate.setUTCDate(nextUpdate.getUTCDate() + 1);
@@ -75,7 +75,7 @@ function updateCountdown() {
 // Fonction pour afficher les salutations basées sur l'heure de Paris
 function updateGreeting() {
     const nowParis = getParisDate();
-    const hours = nowParis.getUTCHours();
+    const hours = nowParis.getHours();
     let greeting = "Hello";
     if (hours >= 6 && hours < 12) greeting = "Good Morning";
     else if (hours >= 12 && hours < 18) greeting = "Good Afternoon";
@@ -122,7 +122,7 @@ async function fetchCitation() {
         const nowParis = getParisDate();
         // Calculer l'index de citation : chaque période de 12h à Paris a un index unique
         const day = nowParis.getUTCFullYear() * 10000 + (nowParis.getUTCMonth() + 1) * 100 + nowParis.getUTCDate();
-        const period = nowParis.getUTCHours() < 12 ? 0 : 1;
+        const period = nowParis.getHours() < 12 ? 0 : 1;
         const periodIndex = (day * 2 + period) % citations.length;
 
         const [quote, author] = citations[periodIndex].split('|');
