@@ -97,7 +97,6 @@ async function fetchCitation() {
         const [quote, author] = citations[periodIndex].split('|');
         document.getElementById('citation').innerText = quote || "Citation not available";
         document.getElementById('author').innerText = author ? `-${author}` : "";
-        gsap.from("#citation", { duration: 2, scale: 0.8, opacity: 0 });
     } catch (error) {
         document.getElementById('citation').innerText = error.message;
         document.getElementById('author').innerText = "";
