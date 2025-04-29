@@ -4,39 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VZN Quote</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Typo moderne, couleurs sobres -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Animate.css pour des animations préconçues -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Lien vers le fichier CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="hero">
-            <h1>VZN QUOTE</h1>
-            <p id="greeting">Loading...</p>
-        </div>
-    </header>
-    <main>
-        <section class="infos">
-            <div class="datetime">
-                <span id="current-date">Loading...</span>
-                <span id="current-time">Loading...</span>
-            </div>
-            <div id="countdown" class="countdown">Next update in: Loading...</div>
-        </section>
-        <section class="quote-card animate-fadein">
-            <blockquote id="citation">Loading...</blockquote>
-            <p id="author"></p>
-        </section>
-    </main>
-    <div id="name-prompt" class="modal hidden">
-        <div class="modal-content">
-            <label for="name-input">What's your name?</label>
-            <input type="text" id="name-input" placeholder="Your name" autocomplete="off">
-            <button onclick="saveName()" class="btn-main">Let's go!</button>
-        </div>
+    <div id="container" class="animate__animated animate__fadeIn">
+        <h1 id="title" class="animate__animated animate__fadeInDown">VZN QUOTE</h1>
+        <p id="greeting" class="animate__animated animate__fadeInLeft">Loading...</p>
+        <p id="current-date" class="animate__animated animate__fadeInRight">Loading...</p>
+        <p id="current-time" class="animate__animated animate__fadeInRight">Loading...</p>
+        <blockquote id="citation" class="animate__animated animate__zoomIn">Loading...</blockquote>
+        <p id="author" class="animate__animated animate__zoomIn"></p>
+        <p id="countdown" class="animate__animated animate__fadeInUp">Next update in: Loading...</p>
     </div>
+
+    <!-- Demande de prénom au premier démarrage -->
+    <div id="name-prompt" class="hidden">
+        <label for="name-input">Enter your name:</label>
+        <input type="text" id="name-input" placeholder="Your name">
+        <button onclick="saveName()">Submit</button>
+    </div>
+
+    <!-- GSAP pour des animations avancées -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Lien vers le fichier JS -->
     <script src="script.js"></script>
 </body>
 </html>
