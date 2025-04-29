@@ -1,9 +1,34 @@
-// Fonction pour afficher la date et l'heure actuelles
-function updateDateTime() {
+// Obtenir la date et l'heure de Paris sous forme d'objet Date
+function getParisDate() {
     const now = new Date();
+    // Extraire les composantes en heure de Paris
+    const options = { timeZone: 'Europe/Paris', hour12: false };
+    const dateParts = new Intl.DateTimeFormat('en-GB', {
+        ...options,
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    }).formatToParts(now).reduce((acc, part) => {
+        if (part.type !== 'literal') acc[part.type] = part.value;
+        return acc;
+    }, {});
+    // Créer un objet Date en UTC correspondant à la date/heure Paris
+    return new Date(Date.UTC(
+        parseInt(dateParts.year),
+        parseInt(dateParts.month) - 1,
+        parseInt(dateParts.day),
+        parseInt(dateParts.hour),
+        parseInt(dateParts.minute),
+        parseInt(dateParts.second)
+    ));
+}
+
+// Fonction pour afficher la date et l'heure de Paris
+function updateDateTime() {
+    const nowParis = getParisDate();
 
     // Formatage de la date en anglais (long format)
-    const formattedDate = now.toLocaleDateString('en-US', {
+    const formattedDate = nowParis.toLocaleDateString('en-US', {
+        timeZone: 'Europe/Paris',
         weekday: 'long',
         day: 'numeric',
         month: 'long',
@@ -11,7 +36,8 @@ function updateDateTime() {
     });
 
     // Formatage de l'heure (24h format)
-    const formattedTime = now.toLocaleTimeString('en-US', {
+    const formattedTime = nowParis.toLocaleTimeString('en-US', {
+        timeZone: 'Europe/Paris',
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
@@ -22,19 +48,19 @@ function updateDateTime() {
     document.getElementById('current-time').innerText = formattedTime;
 }
 
-// Fonction pour afficher le compte à rebours avant la prochaine mise à jour
+// Fonction pour afficher le compte à rebours avant la prochaine mise à jour Paris
 function updateCountdown() {
-    const now = new Date();
-    let nextUpdate = new Date(now);
+    const nowParis = getParisDate();
+    let nextUpdate = new Date(nowParis);
 
-    if (now.getHours() >= 12) {
-        nextUpdate.setDate(now.getDate() + 1);
-        nextUpdate.setHours(0, 0, 0, 0);
+    if (nowParis.getUTCHours() < 12) {
+        nextUpdate.setUTCHours(12, 0, 0, 0);
     } else {
-        nextUpdate.setHours(12, 0, 0, 0);
+        nextUpdate.setUTCDate(nextUpdate.getUTCDate() + 1);
+        nextUpdate.setUTCHours(0, 0, 0, 0);
     }
 
-    const timeRemaining = nextUpdate - now;
+    const timeRemaining = nextUpdate - nowParis;
     if (timeRemaining > 0) {
         const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
         const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
@@ -46,10 +72,10 @@ function updateCountdown() {
     }
 }
 
-// Fonction pour afficher les salutations basées sur l'heure
+// Fonction pour afficher les salutations basées sur l'heure de Paris
 function updateGreeting() {
-    const now = new Date();
-    const hours = now.getHours();
+    const nowParis = getParisDate();
+    const hours = nowParis.getUTCHours();
     let greeting = "Hello";
     if (hours >= 6 && hours < 12) greeting = "Good Morning";
     else if (hours >= 12 && hours < 18) greeting = "Good Afternoon";
@@ -84,7 +110,7 @@ function checkName() {
     return true;
 }
 
-// Fonction pour récupérer une citation basée sur la période de 12 heures
+// Fonction pour récupérer une citation basée sur la période de 12 heures (heure de Paris)
 async function fetchCitation() {
     try {
         const response = await fetch('citations.txt');
@@ -92,8 +118,13 @@ async function fetchCitation() {
         const text = await response.text();
         const citations = text.split('\n').filter(citation => citation.trim() !== '');
         if (citations.length === 0) throw new Error('No citations available in the file.');
-        const now = new Date();
-        const periodIndex = Math.floor(now.getTime() / (12 * 60 * 60 * 1000)) % citations.length;
+
+        const nowParis = getParisDate();
+        // Calculer l'index de citation : chaque période de 12h à Paris a un index unique
+        const day = nowParis.getUTCFullYear() * 10000 + (nowParis.getUTCMonth() + 1) * 100 + nowParis.getUTCDate();
+        const period = nowParis.getUTCHours() < 12 ? 0 : 1;
+        const periodIndex = (day * 2 + period) % citations.length;
+
         const [quote, author] = citations[periodIndex].split('|');
         document.getElementById('citation').innerText = quote || "Citation not available";
         document.getElementById('author').innerText = author ? `-${author}` : "";
