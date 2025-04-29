@@ -1,91 +1,216 @@
-/* Corps de la page */
-body {
-    font-family: 'Times New Roman', serif;
-    text-align: center;
-    background-color: #f4f4f9;
-    color: #333;
+:root {
+    --primary: #1a1a2e;
+    --secondary: #16213e;
+    --accent: #e94560;
+    --bg: #f6f6f6;
+    --white: #fff;
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, .15);
+    --radius: 24px;
+}
+
+html, body {
+    min-height: 100%;
+    background: var(--bg);
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    color: var(--primary);
 }
 
-/* Conteneur principal */
-#container {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
+body {
+    cursor: url('https://cdn.jsdelivr.net/gh/saadeghi/daisyui@latest/src/theming/cursor-pointer.svg'), auto;
 }
 
-/* Titre */
-h1 {
-    font-size: 2.5em;
-    color: #0056b3;
+header .hero {
+    width: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    color: var(--white);
+    padding: 48px 0 24px 0;
+    text-align: center;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow);
 }
 
-/* Salutations */
+header h1 {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 2.8rem;
+    letter-spacing: 0.07em;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+}
+
 #greeting {
-    font-size: 1.5em;
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    animation: fadeIn 1.2s;
 }
 
-/* Date et heure */
-#current-date, #current-time {
-    font-size: 1em;
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 32px;
 }
 
-/* Citation */
+.infos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 8px;
+}
+
+.datetime {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.1rem;
+    color: var(--secondary);
+    gap: 2px;
+}
+
+.countdown {
+    margin-top: 6px;
+    color: var(--accent);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.05rem;
+    background: var(--white);
+    padding: 6px 18px;
+    border-radius: 50px;
+    box-shadow: 0 2px 12px 0 rgba(233, 69, 96, 0.07);
+    animation: fadeIn 1.2s;
+}
+
+.quote-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 30px 32px 30px;
+    max-width: 520px;
+    width: 90vw;
+    margin: 0 auto;
+    text-align: center;
+    transition: box-shadow .3s;
+    position: relative;
+    animation: fadeInUp .8s;
+}
+
+.quote-card:hover {
+    box-shadow: 0 12px 32px 0 rgba(233, 69, 96, 0.15);
+    transform: translateY(-4px) scale(1.01);
+}
+
 blockquote {
-    font-size: 1.5em;
-    margin-top: 30px;
+    font-size: 1.45rem;
+    font-weight: 500;
+    color: var(--primary);
+    margin: 0 0 18px 0;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    position: relative;
 }
 
-/* Auteur */
+blockquote:before, blockquote:after {
+    content: '"';
+    color: var(--accent);
+    font-size: 2rem;
+    font-weight: bold;
+    vertical-align: top;
+}
+
 #author {
-    font-size: 1em;
-    margin-top: 10px;
+    color: var(--secondary);
+    font-size: 1.05rem;
+    font-style: italic;
+    margin: 0;
+    opacity: 0.85;
+    letter-spacing: 0.01em;
 }
 
-/* Décompte */
-#countdown {
-    font-size: 1em;
+.btn-main {
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-family: 'Inter', Arial, sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(233, 69, 96, 0.13);
+    transition: background .2s, transform .2s;
+    margin-top: 18px;
 }
 
-/* Animation personnalisée pour un fondu */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.btn-main:hover {
+    background: var(--secondary);
+    transform: scale(1.04);
 }
 
-/* Animation personnalisée pour une montée progressive */
-@keyframes slideIn {
-    from {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Transition douce pour les changements */
-body * {
-    transition: all 0.3s ease-in-out;
-}
-
-/* Boîte de saisie du prénom */
-.hidden {
-    display: none;
-}
-
-#name-prompt {
+.modal {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(30,30,40,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 36px 32px 32px 32px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 260px;
+}
+
+.modal-content label {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.modal-content input {
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    width: 100%;
+    outline: none;
+    transition: border .2s;
+}
+
+.modal-content input:focus {
+    border: 1.5px solid var(--accent);
+}
+
+@media (max-width: 600px) {
+    .quote-card {
+        padding: 24px 8vw 20px 8vw;
+        font-size: 1.1rem;
+    }
+    header .hero {
+        padding: 36px 0 16px 0;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0;}
+    to { opacity: 1;}
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px);}
+    to { opacity: 1; transform: translateY(0);}
 }
