@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Images + Musique</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { overflow: hidden; }
+
+    #slideshow { position: fixed; inset: 0; }
+    .slide {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0;
+      animation: defilement 24s linear infinite;
+    }
+
+    .s1 { background-image: url('images/bg1.jpg'); animation-delay: 0s; }
+    .s2 { background-image: url('images/bg2.jpg'); animation-delay: 6s; }
+    .s3 { background-image: url('images/bg3.jpg'); animation-delay: 12s; }
+    .s4 { background-image: url('images/bg4.jpg'); animation-delay: 18s; }
+
+    @keyframes defilement {
+      0%   { opacity: 1; }
+      24.9% { opacity: 1; }
+      25%  { opacity: 0; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="slideshow">
+    <div class="slide s1"></div>
+    <div class="slide s2"></div>
+    <div class="slide s3"></div>
+    <div class="slide s4"></div>
+  </div>
+
+  <!-- Musique autoplay en boucle -->
+  <audio src="media/fond.mp3" autoplay loop></audio>
+</body>
+</html>
